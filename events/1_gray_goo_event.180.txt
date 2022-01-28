@@ -1,0 +1,537 @@
+namespace = graygoo
+# Factory Destroyed (Dessanu/Graygoo)
+# This = owner of ship 1 (destroyed)
+# From = owner of ship 2 (combatant)
+# FromFrom = ship 1
+# FromFromFrom = ship 2
+country_event = {
+	id = graygoo.180
+	hide_window = yes
+	picture = GFX_evt_exploding_ship
+	show_sound = event_super_explosion
+	location = root.fromfrom
+
+	is_triggered_only = yes
+
+	trigger = {
+		is_nanite_country = yes
+		exists = root.from
+		root.fromfrom = { is_ship_size = graygoo_factory }
+	}
+
+	immediate = {
+		if = { limit = { exists = root.from }
+			root.from = {
+				save_global_event_target_as = goo_slayer # ADT: used later global
+				country_event = { id = a_deadly_tempest.7 days = 1 } # Give tech
+			}
+			if = { limit = { exists = root.fromfromfrom }
+				root.fromfromfrom = { save_event_target_as = goo_slayer_ship }
+			}
+		}
+
+		if = { limit = { event_target:lcluster4b = { has_owner = yes } }
+			clear_global_event_target = lcluster4b
+		} else = {
+			event_target:lcluster4b = { set_star_flag = graygoo_factory_system }
+		}
+		if = { limit = { event_target:lcluster4 = { has_owner = yes } }
+			clear_global_event_target = lcluster4
+		}
+		if = { limit = { event_target:lcluster3b = { has_owner = yes } }
+			clear_global_event_target = lcluster3b
+		}
+		if = { limit = { event_target:lcluster3 = { has_owner = yes } }
+			clear_global_event_target = lcluster3
+		}
+		if = { limit = { event_target:lcluster2b = { has_owner = yes } }
+			clear_global_event_target = lcluster2b
+		}
+		if = { limit = { event_target:lcluster2 = { has_owner = yes } }
+			clear_global_event_target = lcluster2
+		}
+		if = { limit = { event_target:lcluster1b = { has_owner = yes } }
+			clear_global_event_target = lcluster1b
+		}
+		if = { limit = { event_target:lcluster1 = { has_owner = yes } }
+			clear_global_event_target = lcluster1
+		}
+
+		if = {
+			limit = { is_country_type = gray_goo }
+			if = { limit = { NOT = { exists = event_target:lcluster5 } }
+				if = { limit = { exists = event_target:lcluster_factory_system }
+					event_target:lcluster_factory_system = {
+						save_global_event_target_as = lcluster5
+					}
+				} else = {
+					random_system = {
+						limit = { has_star_flag = lcluster5 }
+						save_global_event_target_as = lcluster5
+					}
+				}
+			}
+			event_target:lcluster_factory_system = {
+				remove_star_flag = graygoo_factory_system
+			}
+			CmtEffectDestroyGraygoo = yes # call graygoo.15
+			break = yes # TODO
+			# ## colonize random planet
+			# random_system = {
+			# 	limit = {
+			# 		has_star_flag = lcluster
+			# 		has_owner = no
+			# 		NOR = {
+			# 			has_star_flag = lcluster_lgate
+			# 			has_owner = no
+			# 			is_same_value = event_target:lcluster_factory_system
+			# 			any_fleet_in_system = { is_in_combat = yes }
+			# 		}
+			# 		any_system_planet = { is_planet_class = pc_gray_goo }
+			# 	}
+			# 	every_system_planet = {
+			# 		limit = { is_planet_class = pc_gray_goo has_owner = no }
+			# 		remove_modifier = terraforming_candidate
+			# 	}
+			# 	save_global_event_target_as = lcluster_factory_system
+			# }
+
+			# event_target:goo_slayer = {
+			# 	country_event = { id = graygoo.100 }
+			# 	country_event = { id = a_deadly_tempest.162 days = 1800 random = 900 } # awaken
+			# }
+			# ## Init hidden system
+			# event_target:lcluster5 = {
+			# 	spawn_system = {
+			# 		min_distance >= 15
+			# 		max_distance <= 35
+			# 		min_orientation_angle = 0
+			# 		max_orientation_angle = 50
+			# 		initializer = distantstars_init_05b
+			# 		hyperlane = no
+			# 		is_discovered = no
+			# 	}
+			# }
+			# if = { limit = { NOT = { exists = event_target:lcluster5b } }
+			# 	random_system = {
+			# 		limit = { has_star_flag = lcluster5b }
+			# 		save_global_event_target_as = lcluster5b
+			# 	}
+			# }
+
+			# if = {
+			# 	limit = {
+			# 		exists = event_target:lcluster5b
+			# 		exists = event_target:gate_builders
+			# 	}
+			# 	event_target:lcluster5b = {
+			# 		add_hyperlane = { from = event_target:lcluster5 to = this }
+			# 		save_global_event_target_as = lcluster_factory_system
+			# 		# event_target:gate_builders = {
+			# 		# 	create_ship_design = { design = "NAME_Cybrex_Station_2" }
+			# 		# 	add_ship_design = last_created_design
+			# 		create_starbase = {
+			# 			size = "starbase_gatebuilders"
+			# 			owner = event_target:gate_builders
+			# 			module = "shipyard"
+			# 			module = "missile_battery"
+			# 			module = "missile_battery"
+			# 			module = "hangar_bay"
+			# 			module = "gun_battery"
+			# 			module = "gun_battery"
+			# 			building = "target_uplink_computer"
+			# 			building = "defense_grid"
+			# 			# location = this
+			# 			effect = {
+			# 				while = { count = 4
+			# 					create_ship = {
+			# 						random_existing_design = military_station_small
+			# 						# name = random
+			# 						# graphical_culture = owner
+			# 						# design = last_created_design
+			# 						# random_existing_design = blue_military_station_small_ai
+			# 						# graphical_culture = ai_01 #"fallen_machine_empire_01"
+			# 					}
+			# 				}
+			# 				# set_starbase_building = { slot = 3 building = "titan_yards" }
+			# 				# set_starbase_building = { slot = 4 building = "colossus_yards" }
+			# 				# set_owner = prev.
+			# 				CmtEffectCreateAdmiralty_DessanuCapitalDefence = yes # Garrison Fleets
+			# 			}
+			# 		}
+			# 		# }
+			# 		#last_created_country
+			# 		random_system_planet = {
+			# 			limit = { has_planet_flag = main_star }
+			# 			save_event_target_as = main_star
+			# 		}
+
+			# 		### Create Factory/Fleets/Starbases
+			# 		event_target:main_star = { planet_event = { id = a_deadly_tempest.4 } }
+			# 		spawn_megastructure = {
+			# 			# type = "dyson_sphere_ruined"
+			# 			type = "dyson_sphere_1"
+			# 			owner = event_target:gate_builders
+			# 		}
+			# 		if = { limit = { host_has_dlc = "Megacorp" }
+			# 			spawn_megastructure = {
+			# 				type = "mega_art_installation_ruined"
+			# 				# type = "interstellar_assembly_ruined"
+			# 			}
+			# 		}
+
+			# 		if = { limit = { host_has_dlc = "Federations" }
+			# 			spawn_megastructure = {
+			# 				# type = "mega_shipyard_ruined"
+			# 				type = mega_shipyard_1
+			# 				planet = event_target:main_star
+			# 				owner = event_target:gate_builders
+			# 				init_effect = {
+			# 					create_ambient_object = {
+			# 						type = "large_debris_object"
+			# 						location = this
+			# 					}
+			# 					last_created_ambient_object = {
+			# 						set_location = {
+			# 							target = prev
+			# 							distance = 20
+			# 							angle = 20
+			# 						}
+			# 					}
+			# 				}
+			# 			}
+			# 		}
+
+			# 		if = {
+			# 			limit = {
+			# 				exists = event_target:gate_builders.capital_scope.solar_system
+			# 				NOT = { is_same_value = event_target:gate_builders.capital_scope.solar_system }
+			# 			}
+			# 			event_target:gate_builders.capital_scope.solar_system = {
+			# 				add_hyperlane = { from = this to = prev }
+			# 				remove_star_flag = graygoo_factory_system
+			# 			}
+			# 		}
+			# 		else_if = {
+			# 			limit = {
+			# 				exists = event_target:lcluster4b
+			# 				NOT = { is_same_value = event_target:lcluster4b }
+			# 			}
+			# 			event_target:lcluster4b = {
+			# 				add_hyperlane = { from = this to = prev }
+			# 				remove_star_flag = graygoo_factory_system
+			# 			}
+			# 		}
+			# 	}
+
+			# 	if = { limit = { exists = event_target:nanite_factory }
+			# 		event_target:nanite_factory = {
+			# 			# CmtEffectCreateAdmiralty_DessanuRoamer = yes # Roamers
+			# 			while = {
+			# 				count = 2
+			# 				create_ship = {
+			# 					name = "NAME_Guardian"
+			# 					design = "NAME_Ancient_Guardian"
+			# 					graphical_culture = "ancient"
+			# 				}
+			# 			}
+			# 			while = {
+			# 				count = 2
+			# 				create_ship = {
+			# 					name = "NAME_Warden"
+			# 					design = "NAME_Ancient_Warden"
+			# 					graphical_culture = "ancient"
+			# 				}
+			# 			}
+			# 			while = {
+			# 				count = 4
+			# 				create_ship = {
+			# 					name = "Nanite $NAME_Defender$"
+			# 					design = "NAME_Ancient_Defender"
+			# 					graphical_culture = "ancient"
+			# 				}
+			# 			}
+			# 			while = {
+			# 				count = 8
+			# 				create_ship = {
+			# 					name = "NAME_Sentinel"
+			# 					design = "NAME_Ancient_Sentinel"
+			# 					graphical_culture = "ancient"
+			# 				}
+			# 			}
+			# 			set_fleet_formation = {
+			# 				position = { x = 13.0	y = -7.0	} #17
+			# 				position = { x = 11.5	y = -13.0	} #16
+			# 				position = { x = 0.0	y = -15.5	} #15
+			# 				position = { x = 13.0	y = 7.0		} #14
+			# 				position = { x = -11.8	y = -4.0	} #13
+			# 				position = { x = -15.8	y = 6.5		} #12
+			# 				position = { x = -10.0	y = 8.5		} #11
+			# 				position = { x = -1.6	y = 15.0	} #10
+			# 				position = { x = 14.0	y = -3.0	} #9
+			# 				position = { x = 1.3	y = -11.0	} #8
+			# 				position = { x = -10.5	y = 1.0		} #7
+			# 				position = { x = 3.0	y = 8.0		} #6
+			# 				position = { x = -4.3	y = -7.0	} #5
+			# 				position = { x = 8.0	y = 9.0		} #4
+			# 				position = { x = -4.0	y = 7.3		} #3
+			# 				position = { x = 7.5	y = -10.5	} #2
+			# 				position = { x = 0.0	y = 0.0		} #1
+			# 			}
+			# 			set_formation_scale = 0.5
+			# 			# set_location = {
+			# 			# 	target = prev
+			# 			# 	distance = 25
+			# 			# 	angle = 150
+			# 			# }
+			# 			#set_fleet_flag = fortress_fleet
+			# 			solar_system = { set_star_flag = lcluster }
+			# 		}
+			# 	}
+			# 	event_target:gate_builders = {
+			# 		country_event = { id = game_start.6 days = 6 random = 2 } # advanced_empire
+			# 		country_event = { id = game_start.8 days = 9 random = 3 } # +tech +resources
+			# 		country_event = { id = game_start.9 days = 12 random = 4 } # empire_init_create_ships
+			# 		# if = { limit = { exists = capital_scope }
+			# 		# 	capital_scope = { }
+			# 		# }
+
+			# 		random_owned_starbase = {
+			# 			limit = {
+			# 				solar_system = {
+			# 					NOT = { is_same_value = event_target:lcluster_factory_system }
+			# 				}
+			# 			}
+			# 			weights = {
+			# 				base = 0.25
+			# 				modifier = {
+			# 					add = 3
+			# 					solar_system = {
+			# 						any_system_planet = { is_colony = yes }
+			# 					}
+			# 				}
+			# 			}
+			# 			while = { count = 4
+			# 				create_ship = { random_existing_design = military_station_small }
+			# 			}
+			# 			solar_system = {
+			# 				every_system_planet = {
+			# 					limit = {
+			# 						is_planet_class = pc_gaia
+			# 						has_modifier = terraforming_candidate
+			# 					}
+			# 					remove_modifier = terraforming_candidate
+			# 				}
+			# 				random_system_planet = {
+			# 					limit = {
+			# 						is_planet_class = pc_gaia
+			# 						is_colony = yes
+			# 					}
+			# 					set_planet_flag = fallen_empire_world
+			# 					set_capital = yes
+			# 				}
+			# 			}
+			# 		}
+
+			# 	}
+			# 	clear_global_event_target = lcluster5b
+			# }
+			break = yes
+		}
+
+		from = { country_event = { id = graygoo.181 } }
+		every_playable_country = {
+			limit = {
+				is_ai = no
+				NOT = { is_same_empire = event_target:goo_slayer }
+			}
+			country_event = { id = graygoo.182 }
+		}
+
+		observer_event = { id = observer.67 }
+		## Change Gaia Planet to Graygoo
+
+		if = { # ADT
+			limit = { exists = event_target:CmtGlobalVar has_global_flag = a_deadly_tempest_mod_active }
+			if = {
+				limit = { event_target:CmtGlobalVar = { check_variable = { which = CmtVarLgateTerraformNanite value = 5 } } }
+				every_owned_planet = {
+					limit = { is_planet_class = pc_gaia }
+					remove_all_buildings = yes
+					every_owned_pop = { kill_pop = yes }
+					generate_new_deposits_and_blockers = yes
+					destroy_colony = yes
+					every_playable_country = {
+						limit = { is_ai = no prev = { is_surveyed = { who = prev status = yes } } }
+						prev = { set_surveyed = { surveyed = no surveyor = prev } }
+					}
+				}
+				# every_galaxy_planet is only working until 2.8
+				every_system = {
+					limit = { has_star_flag = lcluster }
+					every_system_planet = {
+						limit = { is_planet_class = pc_gray_goo has_planet_flag = hidden_nanite_world }
+						add_modifier = { modifier = terraforming_candidate days = -1 }
+						remove_planet_flag = hidden_nanite_world
+					}
+				}
+			} else_if = {
+				limit = {
+					event_target:CmtGlobalVar = {
+						OR = {
+							check_variable = { which = CmtVarLgateTerraformNanite value = 1 }
+							check_variable = { which = CmtVarLgateTerraformNanite value = 2 }
+							check_variable = { which = CmtVarLgateTerraformNanite value = 3 }
+						}
+					}
+				}
+				every_owned_planet = {
+					limit = { is_planet_class = pc_gaia has_planet_flag = hidden_nanite_world }
+					change_pc = pc_gray_goo
+					remove_all_buildings = yes
+					every_owned_pop = { kill_pop = yes }
+					destroy_colony = yes
+					reroll_planet = yes
+					generate_new_deposits_and_blockers = yes
+					remove_planet_flag = hidden_nanite_world
+					every_playable_country = {
+						limit = { is_ai = no prev = { is_surveyed = { who = prev status = yes } } }
+						prev = { set_surveyed = { surveyed = no surveyor = prev } }
+					}
+				}
+			} else = {
+				every_owned_planet = {
+					limit = { is_planet_class = pc_gaia has_planet_flag = hidden_nanite_world }
+					change_pc = pc_gray_goo
+					remove_all_buildings = yes
+					every_owned_pop = { kill_pop = yes }
+					reroll_planet = yes
+					generate_new_deposits_and_blockers = yes
+					destroy_colony = yes
+					add_modifier = { modifier = terraforming_candidate days = -1 }
+					remove_planet_flag = hidden_nanite_world
+					every_playable_country = {
+						limit = { is_ai = no prev = { is_surveyed = { who = prev status = yes } } }
+						prev = { set_surveyed = { surveyed = no surveyor = prev } }
+					}
+				}
+			}
+		} else = { # Vanilla
+			every_owned_planet = {
+				limit = { is_planet_class = pc_gaia }
+				change_pc = pc_gray_goo
+				reroll_planet = yes
+				destroy_colony = yes
+				add_modifier = {
+					modifier = "terraforming_candidate"
+					days = -1
+				}
+			}
+		}
+
+		every_owned_fleet = {
+			every_owned_ship = {
+				limit = { is_disabled = yes }
+				set_disable_at_health = -1
+				set_disabled = no
+				destroy_ship = this
+			}
+			destroy_fleet = this
+		}
+		# pop is not removed automatically
+		every_owned_pop = {
+			kill_pop = yes
+		}
+		# kill also every not owned pop!?
+		every_galaxy_pop = {
+			limit = {
+				exists = this
+				# is_scope_valid = yes
+				exists = species
+				species = { is_exact_same_species = root.owner_species }
+			}
+			kill_pop = yes
+		}
+		every_system = {
+			if = {
+				limit = {
+					has_star_flag = lcluster
+					count_system_megastructure = {
+						count >= 1
+						limit = {
+							is_scope_valid = yes
+							NOT = { is_megastructure_type = lgate_base }
+						}
+					}
+				}
+				# Replace ringworlds, habitats
+				every_system_planet = {
+					limit = {
+						OR = {
+							AND = {
+								has_planet_flag = hidden_nanite_world # TODO pc_ringworld!?
+								OR = {
+									is_planet_class = pc_habitat
+									is_planet_class = pc_shattered
+									is_planet_class = pc_shattered_2
+								}
+							}
+							is_planet_class = pc_ringworld_habitable
+							is_planet_class = pc_ringworld_habitable_damaged
+							is_planet_class = pc_ringworld_tech
+							is_planet_class = pc_ringworld_tech_damaged
+							is_planet_class = pc_ringworld_seam
+							is_planet_class = pc_ringworld_seam_damaged
+						}
+					}
+					# = ring_world_ruined
+
+					destroy_colony = yes
+					remove_planet_flag = hidden_nanite_world
+					remove_planet_flag = has_megastructure
+					random_list = {
+						8 = { remove_planet = yes }
+						2 = { change_pc = pc_asteroid }
+					}
+					# TODO explosion
+					create_ambient_object = {
+						type = explosion_particle_object
+						location = this
+						use_3d_location = no
+						duration = 10
+						scale = 10
+					}
+				}
+				# Remove megastructures
+				every_system_megastructure = {
+					limit = { NOT = { is_megastructure_type = lgate_base } }
+					remove_megastructure = this
+					# TODO explosion
+					# create_ambient_object = {
+					# 	type = explosion_particle_object
+					# 	location = this
+					# 	use_3d_location = no
+					# 	duration = 10
+					# 	scale = 10
+					# }
+					delete_megastructure = this
+				}
+			}
+		}
+		destroy_country = yes
+		clear_global_event_target = graygoo_country
+		clear_global_event_target = nanite_factory
+		clear_global_event_target = lcluster_factory_system
+		clear_global_event_target = lcluster5b
+		clear_global_event_target = lcluster5
+		clear_global_event_target = lcluster4b
+		clear_global_event_target = lcluster4
+		clear_global_event_target = lcluster3b
+		clear_global_event_target = lcluster3
+		clear_global_event_target = lcluster2b
+		clear_global_event_target = lcluster2
+		clear_global_event_target = lcluster1b
+		clear_global_event_target = lcluster1
+		clear_global_event_target = candidate_gateway_system
+	}
+}

@@ -1,0 +1,378 @@
+namespace = a_deadly_tempest
+
+### Nanites
+# Gets overwritten by ADT event
+country_event = {
+	id = a_deadly_tempest.7
+	# title = "a_deadly_tempest.17.name"	# leviathans.2155.name
+	# desc = "distar.137.paci"
+	hide_window = yes
+	is_triggered_only = yes
+	# picture = GFX_evt_gray_goo_ships
+	# show_sound = event_celebration	# event_ship_explosion
+	# location = FromFromFrom
+	trigger = {
+		has_global_flag = l_cluster_opened
+		exists = this
+		# OR = {
+		# 	is_ai = no
+		# 	is_country_type_with_subjects = yes
+		# }
+		OR = {
+			AND = {
+				exists = event_target:goo_slayer
+				is_same_empire = event_target:goo_slayer
+			}
+			AND = {
+				exists = event_target:gray_owner
+				is_same_empire = event_target:gray_owner
+			}
+		}
+	}
+	immediate = {
+		random_system = {
+			limit = { has_star_flag = lcluster }
+			random_system_planet = {
+				limit = {
+					has_moon = yes
+					any_moon = { is_planet_class = pc_gray_goo has_anomaly = no is_colony = no }
+					# is_preventing_anomaly = no
+				}
+				every_playable_country = {
+					limit = {
+						# is_country_type_with_subjects = yes
+						NOR = {
+							has_country_flag = disco_gray
+							is_ai = yes
+							AND = {
+								exists = event_target:gray_owner
+								is_same_empire = event_target:gray_owner
+							}
+							# AND = {
+							# 	exists = event_target:goo_slayer
+							# 	is_same_empire = event_target:goo_slayer
+							# }
+						}
+					}
+					prev = {
+						random_moon = {
+							limit = {
+								is_planet_class = pc_gray_goo
+								has_anomaly = no
+								# is_preventing_anomaly = no
+							}
+							set_surveyed = { surveyed = no surveyor = prevprev }
+							add_anomaly = { category = disco_gray_cat target = prevprev }
+							prevprev = { set_country_flag = disco_gray }
+						}
+					}
+				}
+			}
+		}
+	}
+}
+# Gray Goo Friendship (global)
+country_event = {
+	id = a_deadly_tempest.137
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		exists = event_target:graygoo_country
+	}
+	immediate = {
+		event_target:graygoo_country = {
+			# Pre-Ketlings
+			if = {
+				limit = { exists = event_target:ratling_pre_space_country }
+				set_faction_hostility = {
+					set_hostile = no
+					#set_neutral = no
+					set_friendly = yes
+					target = event_target:ratling_pre_space_country
+				}
+				event_target:ratling_pre_space_country = {
+					set_faction_hostility = {
+						set_hostile = no
+						#set_neutral = no
+						set_friendly = yes
+						target = prev
+					}
+				}
+			}
+			# Scrapperbot
+			if = {
+				limit = { exists = event_target:scavenger_bot_country }
+				set_faction_hostility = {
+					set_hostile = no
+					#set_neutral = no
+					set_friendly = yes
+					target = event_target:scavenger_bot_country
+				}
+				event_target:scavenger_bot_country = {
+					set_faction_hostility = {
+						set_hostile = no
+						#set_neutral = no
+						set_friendly = yes
+						target = prev
+					}
+				}
+			}
+			# Enigmatic Fortress (enigmatic_cache)
+			# if = { # 	limit = { exists = event_target:fortress_country }
+			# 	set_faction_hostility = {
+			# 		set_hostile = no
+			# 		#set_neutral = no
+			# 		set_friendly = yes
+			# 		target = event_target:fortress_country
+			# 	}
+			# 	event_target:fortress_country = {
+			# 		set_faction_hostility = {
+			# 			set_hostile = no
+			# 			#set_neutral = no
+			# 			set_friendly = yes
+			# 			target = prev
+			# 		}
+			# 	}
+			# }
+			# Enigmatic Cache (guardian_fortress)
+			if = {
+				limit = { exists = event_target:enigmatic_cache_present_host }
+				set_faction_hostility = {
+					set_hostile = no
+					#set_neutral = no
+					set_friendly = yes
+					target = event_target:enigmatic_cache_present_host
+				}
+				event_target:enigmatic_cache_present_host = {
+					set_faction_hostility = {
+						set_hostile = no
+						#set_neutral = no
+						set_friendly = yes
+						target = prev
+					}
+				}
+			}
+			# mardak_vol
+			if = {
+				limit = { exists = event_target:mardak_vol_country }
+				set_faction_hostility = {
+					set_hostile = no
+					#set_neutral = no
+					set_friendly = yes
+					target = event_target:mardak_vol_country
+				}
+				event_target:mardak_vol_country = {
+					set_faction_hostility = {
+						set_hostile = no
+						#set_neutral = no
+						set_friendly = yes
+						target = prev
+					}
+				}
+			}
+			# Gatebuilders
+			if = {
+				limit = {
+					# is_country_type = gate_builders
+					exists = event_target:ratling_country
+				}
+				set_faction_hostility = {
+					set_hostile = no
+					#set_neutral = no
+					set_friendly = yes
+					target = event_target:ratling_country
+				}
+				event_target:ratling_country = {
+					set_faction_hostility = {
+						set_hostile = no
+						#set_neutral = no
+						set_friendly = yes
+						target = prev
+					}
+				}
+			}
+		}
+	}
+}
+
+# Nanite_dragon_friendship (in fact it is more a scripted effect)
+country_event = {
+	id = a_deadly_tempest.13006
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		OR = {
+			has_global_flag = gray_goo_crisis_set
+			has_global_flag = gray_goo_empire_set
+		}
+		# has_global_flag = dragon_season
+	}
+	immediate = {
+		if = {
+			limit = {
+				has_global_flag = dragon_season
+				NOT = { exists = event_target:spawning_dragons }
+			}
+			random_country = {
+				limit = { is_country_type = ldragon_country }
+				save_global_event_target_as = spawning_dragons
+			}
+		}
+		if = {
+			limit = {
+				has_global_flag = gray_goo_crisis_set
+				OR = {
+					NOT = { exists = event_target:graygoo_country }
+					event_target:graygoo_country = { is_country_type = gate_builders }
+				}
+			}
+			random_country = {
+				limit = { is_country_type = gray_goo }
+				save_global_event_target_as = graygoo_country
+			}
+		}
+		if = {
+			limit = {
+				exists = event_target:graygoo_country
+				exists = event_target:spawning_dragons
+			}
+			event_target:graygoo_country = {
+				every_owned_fleet = {
+					limit = {
+						is_disabled = no
+						# is_in_combat = yes
+						is_ship_class = shipclass_military
+						solar_system = {
+							NOT = { has_star_flag = lcluster }
+						}
+					}
+					every_owned_ship = { set_disabled = yes }
+					# set_aggro_range = 0
+					# set_fleet_stance = passive
+					# log = "graygoo fleet tmp disabled"
+				}
+				set_country_flag = first_alien_life
+				set_country_flag = has_encountered_other_empire
+				establish_communications_no_message = event_target:spawning_dragons
+				add_trust = {
+					who = event_target:spawning_dragons
+					amount = 2000
+				}
+				set_faction_hostility = {
+					set_hostile = no
+					# set_neutral = no
+					set_friendly = yes
+					target = event_target:spawning_dragons
+				}
+				country_event = { id = a_deadly_tempest.13007 days = 3 }
+			}
+			event_target:spawning_dragons = {
+				set_country_flag = first_alien_life
+				set_country_flag = has_encountered_other_empire
+				# establish_contact = { who = event_target:graygoo_country location = }
+				establish_communications_no_message = event_target:graygoo_country
+				add_trust = {
+					who = event_target:graygoo_country
+					amount = 2000
+				}
+				set_faction_hostility = {
+					set_hostile = no
+					# set_neutral = no
+					set_friendly = yes
+					target = event_target:graygoo_country
+				}
+				# country_event = { id = a_deadly_tempest.13007 days = 4 }
+			}
+			# log = "goo_dragon_friendship" # [spawning_dragons.GetName] - [graygoo_country.GetName]
+		}
+		# else = {
+		# 	# log = "goo_dragon_friendship country missing"
+		# 	event_target:spawning_dragons = {
+		# 		every_owned_ship = {
+		# 			limit = { is_disabled = no }
+		# 			set_disabled = yes
+		# 		}
+		# 	}
+		# }
+		# Gatebuilders
+		if = {
+			limit = {
+				has_global_flag = gray_goo_crisis_set
+				has_global_flag = gray_goo_empire_set
+				exists = event_target:graygoo_country
+			}
+			if = {
+				limit = { NOT = { exists = event_target:gate_builders } }
+				random_country = {
+					limit = { is_country_type = gate_builders }
+					save_global_event_target_as = gate_builders
+				}
+			}
+			event_target:graygoo_country = {
+				set_faction_hostility = {
+					set_hostile = no
+					#set_neutral = no
+					set_friendly = yes
+					target = event_target:gate_builders
+				}
+				event_target:gate_builders = {
+					set_faction_hostility = {
+						set_hostile = no
+						#set_neutral = no
+						set_friendly = yes
+						target = prev
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				has_global_flag = a_deadly_tempest_mod_active
+				exists = event_target:graygoo_country
+				exists = event_target:lcluster_factory_system
+			}
+			# Fallback (savegame comp.) re-save event_targets
+			if = {
+				limit = { NOT = { exists = event_target:nanite_factory } }
+				event_target:lcluster_factory_system = {
+					random_fleet_in_system = {
+						limit = { is_ship_size = graygoo_factory }
+						save_global_event_target_as = nanite_factory
+					}
+				}
+			}
+			country_event = { id = a_deadly_tempest.13008 days = 7 }
+		}
+	}
+}
+
+country_event = {
+	id = a_deadly_tempest.13007
+	hide_window = yes
+	is_triggered_only = yes
+	immediate = {
+		# every_owned_fleet = {	limit = { has_fleet_flag = trait_biothrall_tolerance }
+		every_owned_ship = {
+			limit = { is_disabled = yes }
+			set_disabled = no
+		}
+	}
+}
+country_event = {
+	id = a_deadly_tempest.13008
+	hide_window = yes
+	is_triggered_only = yes
+	trigger = {
+		exists = event_target:nanite_factory
+		exists = event_target:graygoo_country
+	}
+	immediate = {
+		event_target:graygoo_country = {
+			every_owned_fleet = {
+				limit = { has_fleet_flag = trait_biothrall_tolerance }
+				set_fleet_stance = aggressive
+				set_aggro_range = 250
+			}
+		}
+	}
+}
